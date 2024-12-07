@@ -7,9 +7,10 @@ app.get("/", (c) => {
 });
 
 app.post("/", async (c) => {
-  const body = await c.req.parseBody();
+  const body = await c.req.json();
+  console.log("Received request:");
   console.log(JSON.stringify(body));
-  return c.text("OK");
+  return c.text('ok');
 });
 
 export default app;
