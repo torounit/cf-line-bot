@@ -31,19 +31,17 @@ app.post("/", async (c) => {
     });
   }
 
-  const body = await c.req.json();
+  const body: line.WebhookRequestBody = await c.req.json();
   console.log("Received request:");
   console.log(JSON.stringify(body));
 
-  if (body.events) {
-    await Promise.all(
-      body.events.map(async (event: line.WebhookEvent) => {
-        if (event.type === "message" && event.message.type === "text") {
-          await replyMessage(event.replyToken, event.message.text);
-        }
-      }),
-    );
-  }
+  await Promise.all(
+    body.events.map(async (event) => {
+      if (event.type === "message" && event.message.type === "text") {
+        await replyMessage(event.replyToken, event.message.text);
+      }
+    }),
+  );
 
   return c.text("ok");
 });
