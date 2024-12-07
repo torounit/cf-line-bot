@@ -1,12 +1,7 @@
 import { Hono } from "hono";
 import * as line from "@line/bot-sdk";
 
-type Bindings = {
-  LINE_CHANNEL_ACCESS_TOKEN: string;
-  LINE_CHANNEL_SECRET: string;
-};
-
-const app = new Hono<{ Bindings: CloudflareBindings & Bindings }>();
+const app = new Hono<{ Bindings: CloudflareBindings }>();
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");
@@ -19,13 +14,30 @@ app.post("/", async (c) => {
   const client = new line.messagingApi.MessagingApiClient(config);
   line.middleware({ channelSecret: c.env.LINE_CHANNEL_SECRET });
 
+  async function askToAI(message: string) {
+    // @ts-expect-error model is not defined
+    return await c.env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
+      messages: [
+        { role: "system", content: "You are a friendly assistant" },
+        {
+          role: "user",
+          content: message,
+        },
+      ]
+    });
+
+  }
+
   async function replyMessage(replyToken: string, message: string) {
+    console.log("asking:");
+    const { response } = await askToAI(message) as Exclude<AiTextGenerationOutput, ReadableStream>;
+
     return await client.replyMessage({
       replyToken: replyToken,
       messages: [
         {
           type: "text",
-          text: `You said: ${message}`,
+          text: response || '',
         },
       ],
     });
