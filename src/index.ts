@@ -39,7 +39,7 @@ app.post("/", async (c) => {
     const { response } = await askToAI(message) as Exclude<AiTextGenerationOutput, ReadableStream>;
 
     return await client.replyMessage({
-      replyToken: replyToken,
+      replyToken,
       messages: [
         {
           type: "text",
