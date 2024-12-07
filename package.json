@@ -4,7 +4,7 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
-    "prettier": "npx prettier --write 'src/**/*.ts' && eslint --fix --ext .ts src"
+    "prettier": "npx prettier --write 'src/**/*.ts' && eslint --fix src"
   },
   "dependencies": {
     "@line/bot-sdk": "^9.5.0",

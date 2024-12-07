@@ -3,6 +3,7 @@ import * as line from "@line/bot-sdk";
 
 type Bindings = {
   LINE_CHANNEL_ACCESS_TOKEN: string;
+  LINE_CHANNEL_SECRET: string;
 };
 
 const app = new Hono<{ Bindings: CloudflareBindings & Bindings }>();
@@ -12,24 +13,21 @@ app.get("/", (c) => {
 });
 
 app.post("/", async (c) => {
+  const config: line.ClientConfig = {
+    channelAccessToken: c.env.LINE_CHANNEL_ACCESS_TOKEN,
+  };
+  const client = new line.messagingApi.MessagingApiClient(config);
+  line.middleware({ channelSecret: c.env.LINE_CHANNEL_SECRET });
+
   async function replyMessage(replyToken: string, message: string) {
-    const requestBody = JSON.stringify({
+    return await client.replyMessage({
       replyToken: replyToken,
       messages: [
         {
           type: "text",
-          text: message,
+          text: `You said: ${message}`,
         },
       ],
-    });
-
-    return await fetch("https://api.line.me/v2/bot/message/reply", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${c.env.LINE_CHANNEL_ACCESS_TOKEN}`,
-      },
-      body: requestBody,
     });
   }
 
