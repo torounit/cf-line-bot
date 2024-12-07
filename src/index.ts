@@ -15,16 +15,22 @@ app.post("/", async (c) => {
   line.middleware({ channelSecret: c.env.LINE_CHANNEL_SECRET });
 
   async function askToAI(message: string) {
-    // @ts-expect-error model is not defined
-    return await c.env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
-      messages: [
-        { role: "system", content: "You are a friendly assistant" },
-        {
-          role: "user",
-          content: message,
-        },
-      ]
-    });
+    try {
+      // @ts-expect-error model is not defined
+      return await c.env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
+        messages: [
+          { role: "system", content: "You are a friendly assistant. You answer in Japanese." },
+          {
+            role: "user",
+            content: message,
+          },
+        ]
+      });
+    }
+    catch (e) {
+      console.error(e);
+      return { response: "I'm sorry, I don't understand." };
+    }
 
   }
 
