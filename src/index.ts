@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-
+import * as line from "@line/bot-sdk";
 
 type Bindings = {
   LINE_CHANNEL_ACCESS_TOKEN: string;
@@ -39,7 +39,7 @@ app.post("/", async (c) => {
 
   if (body.events) {
     await Promise.all(
-      body.events.map(async (event: any) => {
+      body.events.map(async (event: line.WebhookEvent) => {
         if (event.type === "message" && event.message.type === "text") {
           await replyMessage(event.replyToken, event.message.text);
         }
