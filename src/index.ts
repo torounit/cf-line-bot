@@ -22,31 +22,35 @@ app.post("/", async (c) => {
       // @ts-expect-error model is not defined
       return await c.env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
         messages: [
-          { role: "system", content: "You are a friendly assistant. You answer in Japanese." },
+          {
+            role: "system",
+            content: "You are a friendly assistant. You answer in Japanese.",
+          },
           {
             role: "user",
             content: message,
           },
-        ]
+        ],
       });
-    }
-    catch (e) {
+    } catch (e) {
       console.error(e);
       return { response: "I'm sorry, I don't understand." };
     }
-
   }
 
   async function replyMessage(replyToken: string, message: string) {
     console.log("asking:");
-    const { response } = await askToAI(message) as Exclude<AiTextGenerationOutput, ReadableStream>;
+    const { response } = (await askToAI(message)) as Exclude<
+      AiTextGenerationOutput,
+      ReadableStream
+    >;
     console.log(`response: ${response}`);
     return await client.replyMessage({
       replyToken,
       messages: [
         {
           type: "text",
-          text: response || '',
+          text: response || "",
         },
       ],
     });
@@ -55,13 +59,16 @@ app.post("/", async (c) => {
   const body: line.WebhookRequestBody = await c.req.json();
   console.log("Received request:");
   console.log(JSON.stringify(body));
+  const { events } = body;
 
-  await Promise.all(
-    body.events.map(async (event) => {
-      if (event.type === "message" && event.message.type === "text") {
-        await replyMessage(event.replyToken, event.message.text);
-      }
-    }),
+  c.executionCtx.waitUntil(
+    Promise.all(
+      events.map(async (event) => {
+        if (event.type === "message" && event.message.type === "text") {
+          await replyMessage(event.replyToken, event.message.text);
+        }
+      }),
+    ),
   );
 
   return c.text("ok");
