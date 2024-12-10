@@ -14,6 +14,9 @@ app.post("/", async (c) => {
   const client = new line.messagingApi.MessagingApiClient(config);
   line.middleware({ channelSecret: c.env.LINE_CHANNEL_SECRET });
 
+  /**
+   *
+   */
   async function askToAI(message: string) {
     try {
       // @ts-expect-error model is not defined
@@ -37,7 +40,7 @@ app.post("/", async (c) => {
   async function replyMessage(replyToken: string, message: string) {
     console.log("asking:");
     const { response } = await askToAI(message) as Exclude<AiTextGenerationOutput, ReadableStream>;
-
+    console.log(`response: ${response}`);
     return await client.replyMessage({
       replyToken,
       messages: [
