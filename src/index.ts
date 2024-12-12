@@ -10,10 +10,9 @@ app.get("/", (c) => {
 });
 
 app.post("/", async (c) => {
-  const config: line.ClientConfig = {
+  const client = new line.messagingApi.MessagingApiClient({
     channelAccessToken: c.env.LINE_CHANNEL_ACCESS_TOKEN,
-  };
-  const client = new line.messagingApi.MessagingApiClient(config);
+  });
   line.middleware({ channelSecret: c.env.LINE_CHANNEL_SECRET });
 
   const adapter = new PrismaD1(c.env.DB);
