@@ -3,5 +3,6 @@
 interface CloudflareBindings {
 	LINE_CHANNEL_SECRET: string;
 	LINE_CHANNEL_ACCESS_TOKEN: string;
+	DB: D1Database;
 	AI: Ai;
 }
