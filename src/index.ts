@@ -76,8 +76,8 @@ app.post("/", async (c) => {
           content: `${response}`,
           role: "assistant",
         },
-      ]
-    })
+      ],
+    });
 
     return await client.replyMessage({
       replyToken,
@@ -98,16 +98,15 @@ app.post("/", async (c) => {
   c.executionCtx.waitUntil(
     Promise.all(
       events.map(async (event) => {
-        if (
-          event.type === "message" &&
-          event.message.type === "text" &&
-          event.source.type === "user"
-        ) {
-          await replyMessage(
-            event.replyToken,
-            event.message.text,
-            event.source.userId,
-          );
+        console.log("Received event:", JSON.stringify(event));
+        if (event.type === "message") {
+          if (event.message.type === "text" && event.source.type === "user") {
+            await replyMessage(
+              event.replyToken,
+              event.message.text,
+              event.source.userId,
+            );
+          }
         }
       }),
     ),
