@@ -24,7 +24,7 @@ app.post("/", async (c) => {
       messages: [
         {
           role: "system",
-          content: `You are a friendly assistant. You answer in Japanese. Today is ${new Date().toUTCString()}. Timezone is Asia/Tokyo.`,
+          content: `You are a friendly assistant. You answer in Japanese. The current unix time is ${new Date().getTime()}. Timezone is Asia/Tokyo.`,
         },
         ...messages,
       ],
