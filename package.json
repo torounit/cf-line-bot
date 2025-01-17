@@ -2,7 +2,7 @@
   "name": "cf-line-bot",
   "scripts": {
     "dev": "wrangler dev",
-    "prisma:generate": "npx prisma generate",
+    "build": "npx prisma generate",
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "prettier": "npx prettier --write 'src/**/*.ts' && eslint --fix src"
