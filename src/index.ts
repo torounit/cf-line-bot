@@ -24,7 +24,7 @@ app.post("/", async (c) => {
       messages: [
         {
           role: "system",
-          content: "You are a friendly assistant. You answer in Japanese.",
+          content: `You are a friendly assistant. You answer in Japanese. Today is ${new Date().toUTCString()}. Timezone is Asia/Tokyo.`,
         },
         ...messages,
       ],
@@ -37,6 +37,7 @@ app.post("/", async (c) => {
     userId: string,
   ) {
     const savedMessages = await prisma.message.findMany({
+      take: 10,
       where: {
         userId: userId,
       },
