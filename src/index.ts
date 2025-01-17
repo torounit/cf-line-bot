@@ -25,8 +25,8 @@ app.post("/", async (c) => {
         {
           role: "system",
           content: `
-          You are a friendly assistant. You answer in Japanese.
-          Today is ${new Date().toLocaleString('en', { timeZone: 'Asia/Tokyo' })}. Timezone is Asia/Tokyo`,
+          あなたは親切なチャットボットです。日本語で応答します。
+          今日は ${new Date().toLocaleString('en', { timeZone: 'Asia/Tokyo' })} です。 タイムゾーン は Asia/Tokyo です。`,
         },
         ...messages,
       ],
