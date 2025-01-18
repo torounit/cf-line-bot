@@ -39,17 +39,17 @@ app.post("/", async (c) => {
     userId: string,
   ) {
     const savedMessages = await prisma.message.findMany({
-    
+      take: 20,
       where: {
         userId: userId,
       },
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
     });
 
     const messages = [
-      ...savedMessages.map(({ role, content }) => ({
+      ...savedMessages.reverse().map(({ role, content }) => ({
         role: role as "user" | "assistant",
         content,
       })),
