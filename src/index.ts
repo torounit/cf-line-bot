@@ -39,7 +39,7 @@ app.post("/", async (c) => {
     userId: string,
   ) {
     const savedMessages = await prisma.message.findMany({
-      take: 10,
+    
       where: {
         userId: userId,
       },
